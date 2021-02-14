@@ -201,6 +201,7 @@ module.exports = {
         allowHigherOrderFunctions: true,
       },
     ],
+    '@typescript-eslint/no-empty-function': 'off',
   },
   ignorePatterns: ['dist'],
 };
