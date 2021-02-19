@@ -5,7 +5,7 @@ export type OrderByType<T, K extends keyof T = keyof T> =
   | K
   | ((value: T) => any)
   | (((value: T) => any) | K)[]
-  | Record<K, OrderByDirection>;
+  | Partial<Record<K, OrderByDirection>>;
 
 export type OrderByDirection = 'asc' | 'desc';
 
