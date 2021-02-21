@@ -49,3 +49,11 @@ export function isSymbol(value: any): value is symbol {
 export function isKeyof<T, K extends keyof T>(value: any): value is K {
   return isString(value) || isNumber(value) || isSymbol(value);
 }
+
+export function isSet(value: any): value is Set<any> {
+  return Object.prototype.toString.call(value) === '[object Set]';
+}
+
+export function isMap(value: any): value is Map<any, any> {
+  return Object.prototype.toString.call(value) === '[object Map]';
+}
