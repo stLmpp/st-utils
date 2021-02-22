@@ -2,7 +2,7 @@ import { isArray, isFunction } from './util';
 import { coerceArray } from './coersion';
 import { orderBy, OrderByDirection, OrderByType } from './order-by';
 
-export type IdKeyType = number | string | symbol;
+export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
 export type IdGetter<T extends Record<any, any>, K extends keyof T> = K | IdGetterFn<T>;
 
