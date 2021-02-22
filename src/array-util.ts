@@ -2,14 +2,15 @@ import { isArray, isFunction } from './util';
 import { coerceArray } from './coersion';
 import { orderBy, OrderByDirection, OrderByType } from './order-by';
 
-export type IdGetterFn<T extends Record<any, any>, K extends keyof T> = (entity: T) => T[K];
-export type IdGetter<T extends Record<any, any>, K extends keyof T> = K | IdGetterFn<T, K>;
+export type IdKeyType = number | string | symbol;
+export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
+export type IdGetter<T extends Record<any, any>, K extends keyof T> = K | IdGetterFn<T>;
 
 /**
  * @description used to parse an IdGetter (keyof or predicate)
  * @param getter
  */
-export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(getter: IdGetter<T, K>): IdGetterFn<T, K> {
+export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(getter: IdGetter<T, K>): IdGetterFn<T> {
   if (isFunction(getter)) {
     return getter;
   } else {
@@ -28,9 +29,9 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
     this._idGetter = parseIdGetter(idGetter);
   }
 
-  private readonly _idGetter: IdGetterFn<T, K>;
+  private readonly _idGetter: IdGetterFn<T>;
 
-  private _upsertOne(id: T[K], partial: T | Partial<T>): this {
+  private _upsertOne(id: IdKeyType, partial: T | Partial<T>): this {
     const itemIndex = this.array.findIndex(item => this._idGetter(item) === id);
     if (itemIndex === -1) {
       return this.append({ ...(partial as T) });
@@ -63,7 +64,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @description get one based on the id
    * @param id
    */
-  getOne(id: T[K]): T | undefined {
+  getOne(id: IdKeyType): T | undefined {
     return this.array.find(item => this._idGetter(item) === id);
   }
 
@@ -71,10 +72,10 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @description try to get one based on the id, if not found throw an error
    * @param id
    */
-  getOneOrFail(id: T[K]): T {
+  getOneOrFail(id: IdKeyType): T {
     const itemIndex = this.array.findIndex(item => this._idGetter(item) === id);
     if (itemIndex === -1) {
-      throw new Error(`Item not found with id ${id}`);
+      throw new Error(`Item not found with id ${id.toString()}`);
     }
     return this.array[itemIndex];
   }
@@ -83,7 +84,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @description get many items based on ids
    * @param ids
    */
-  getMany(ids: T[K][]): T[] {
+  getMany(ids: IdKeyType[]): T[] {
     return this.array.filter(item => ids.includes(this._idGetter(item)));
   }
 
@@ -93,7 +94,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param partialOrCallback
    */
   update(
-    idOrPredicate: T[K] | T[K][] | ArrayUtilPredicate<T>,
+    idOrPredicate: IdKeyType | IdKeyType[] | ArrayUtilPredicate<T>,
     partialOrCallback: T | Partial<T> | ArrayUtilUpdate<T>
   ): this {
     let predicate: ArrayUtilPredicate<T>;
@@ -122,7 +123,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param idOrItems
    * @param partial
    */
-  upsert(idOrItems: T[K] | (T | Partial<T>)[], partial?: T | Partial<T>): this {
+  upsert(idOrItems: IdKeyType | (T | Partial<T>)[], partial?: T | Partial<T>): this {
     if (isArray(idOrItems)) {
       this._upsertMany(idOrItems);
     } else if (partial) {
@@ -164,7 +165,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @description remove item or itens of the array, based on the id, ids or predicate
    * @param idOrPredicate
    */
-  remove(idOrPredicate: T[K] | T[K][] | ArrayUtilPredicate<T>): this {
+  remove(idOrPredicate: IdKeyType | IdKeyType[] | ArrayUtilPredicate<T>): this {
     let predicate: ArrayUtilPredicate<T>;
     if (isFunction(idOrPredicate)) {
       predicate = idOrPredicate;
