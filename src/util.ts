@@ -57,3 +57,10 @@ export function isSet(value: any): value is Set<any> {
 export function isMap(value: any): value is Map<any, any> {
   return Object.prototype.toString.call(value) === '[object Map]';
 }
+
+export function normalizeString(str: string): string {
+  return (str ?? '')
+    .toString()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+}
