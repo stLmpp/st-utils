@@ -34,6 +34,10 @@ export function isNil(value: any): value is null | undefined {
   return value == null;
 }
 
+export function isNotNil<T>(value: T): value is NonNullable<T> {
+  return !isNil(value);
+}
+
 export function isDate(value: any): value is Date {
   return Object.prototype.toString.call(value) === '[object Date]';
 }
@@ -43,7 +47,7 @@ export function isRegExp(value: any): value is RegExp {
 }
 
 export function isSymbol(value: any): value is symbol {
-  return Object.prototype.toString.call(value) === '[object Symbol]';
+  return typeof value === 'symbol';
 }
 
 export function isKeyof<T, K extends keyof T>(value: any): value is K {

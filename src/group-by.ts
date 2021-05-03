@@ -34,7 +34,7 @@ function groupByObject<T extends Record<any, any>, K extends ConditionalKeys<T, 
     const itemKey = item[key];
     grouped[itemKey] = [...(grouped[itemKey] ?? []), item];
   }
-  return grouped;
+  return grouped as GroupedObject<T, K>;
 }
 
 export function groupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(

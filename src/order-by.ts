@@ -1,4 +1,4 @@
-import sort from 'fast-sort';
+import { sort } from 'fast-sort';
 import { isArray, isFunction, isKeyof, isNil } from './util';
 
 export type OrderByType<T, K extends keyof T = keyof T> =

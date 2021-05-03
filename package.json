@@ -13,17 +13,17 @@
   "author": "stLmpp",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "~4.15.1",
-    "@typescript-eslint/parser": "~4.15.1",
-    "eslint": "~7.20.0",
-    "eslint-config-prettier": "~8.0.0",
+    "@typescript-eslint/eslint-plugin": "~4.22.0",
+    "@typescript-eslint/parser": "~4.22.0",
+    "eslint": "~7.25.0",
+    "eslint-config-prettier": "~8.3.0",
     "eslint-plugin-import": "~2.22.1",
     "prettier": "~2.2.1",
-    "tslib": "~2.1.0",
-    "typescript": "~4.1.5"
+    "tslib": "~2.2.0",
+    "type-fest": "~1.0.2",
+    "typescript": "~4.2.4"
   },
   "dependencies": {
-    "fast-sort": "~2.2.0",
-    "type-fest": "~0.21.1"
+    "fast-sort": "~3.0.2"
   }
 }

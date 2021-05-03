@@ -1,6 +1,9 @@
 import { isArray, isFunction } from './util';
 import { coerceArray } from './coersion';
 import { orderBy, OrderByDirection, OrderByType } from './order-by';
+import { uniqBy, uniqWith } from './uniq';
+import { sample } from './sample';
+import { arrayAt } from './array-at';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -192,11 +195,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param index
    */
   at(index: number): T | undefined {
-    index = Math.trunc(index) || 0;
-    if (index < 0) {
-      index += this.array.length;
-    }
-    return this.array[index];
+    return arrayAt(this.array, index);
   }
 
   /**
@@ -228,6 +227,23 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    */
   getFirst(): T | undefined {
     return this.array[0];
+  }
+
+  /**
+   * @description get a random item from the array, returns undefined if the array is empty
+   */
+  sample(): T | undefined {
+    return sample(this.array);
+  }
+
+  uniqBy(key: keyof T): this {
+    this.array = uniqBy(this.array, key);
+    return this;
+  }
+
+  uniqWith(comparator: (valueA: T, valueB: T) => boolean): this {
+    this.array = uniqWith(this.array, comparator);
+    return this;
   }
 }
 

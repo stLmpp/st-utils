@@ -9,3 +9,6 @@ export * from './sum';
 export * from './type';
 export * from './uniq';
 export * from './util';
+export * from './random';
+export * from './array-at';
+export * from './sample';
