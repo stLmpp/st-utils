@@ -4,6 +4,7 @@ import { orderBy, OrderByDirection, OrderByType } from './order-by';
 import { uniqBy, uniqWith } from './uniq';
 import { sample } from './sample';
 import { arrayAt } from './array-at';
+import { arrayRemove } from './array-remove';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -177,7 +178,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
     } else {
       predicate = entity => this._idGetter(entity) === idOrPredicate;
     }
-    this.array = this.array.filter((entity, index, array) => !predicate(entity, index, array));
+    this.array = arrayRemove(this.array, predicate);
     return this;
   }
 

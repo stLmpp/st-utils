@@ -12,3 +12,4 @@ export * from './util';
 export * from './random';
 export * from './array-at';
 export * from './sample';
+export * from './array-remove';
