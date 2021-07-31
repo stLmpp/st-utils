@@ -100,3 +100,7 @@ export function getFirstKey<T extends Record<any, any>>(object: T): keyof T | un
   }
   return undefined;
 }
+
+export function isBoolean(value: any): value is boolean {
+  return typeof value === 'boolean';
+}

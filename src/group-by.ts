@@ -1,7 +1,7 @@
 import type { ConditionalKeys } from 'type-fest';
 import type { KeyType } from './type';
 
-export type GroupedReturnType = 'tupple' | 'map' | 'object';
+export type GroupedReturnType = 'tuple' | 'map' | 'object';
 export type GroupedTuple<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T> = [T[K], T[]][];
 export type GroupedMap<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T> = Map<T[K], T[]>;
 export type GroupedObject<T extends Record<any, any>, K extends ConditionalKeys<T, KeyType>> = Record<T[K], T[]>;
@@ -18,7 +18,7 @@ function groupByMap<T extends Record<any, any> = Record<any, any>, K extends key
   return map;
 }
 
-function groupByTupple<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
+function groupByTuple<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
   array: T[],
   key: K
 ): GroupedTuple {
@@ -44,7 +44,7 @@ export function groupBy<T extends Record<any, any> = Record<any, any>, K extends
 export function groupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
   array: T[],
   key: K,
-  returnType: 'tupple'
+  returnType: 'tuple'
 ): GroupedTuple<T, K>;
 export function groupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
   array: T[],
@@ -67,6 +67,6 @@ export function groupBy(
     case 'object':
       return groupByObject(array, key);
     default:
-      return groupByTupple(array, key);
+      return groupByTuple(array, key);
   }
 }

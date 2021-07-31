@@ -13,3 +13,5 @@ export * from './random';
 export * from './array-at';
 export * from './sample';
 export * from './array-remove';
+export * from './round';
+export * from './array-rotate';
