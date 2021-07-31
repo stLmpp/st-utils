@@ -29,7 +29,7 @@ export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: num
 /**
  * @description a set of utilities to modify arrays of object with immutability
  */
-export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> implements Iterable<T>{
+export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> implements Iterable<T> {
   constructor(private array: T[], idGetter: IdGetter<T, K>) {
     this._idGetter = parseIdGetter(idGetter);
   }
