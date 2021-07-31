@@ -5,6 +5,7 @@ import { uniqBy, uniqWith } from './uniq';
 import { sample } from './sample';
 import { arrayAt } from './array-at';
 import { arrayRemove } from './array-remove';
+import { arrayRotate } from './array-rotate';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -28,7 +29,7 @@ export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: num
 /**
  * @description a set of utilities to modify arrays of object with immutability
  */
-export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> {
+export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> implements Iterable<T>{
   constructor(private array: T[], idGetter: IdGetter<T, K>) {
     this._idGetter = parseIdGetter(idGetter);
   }
@@ -57,10 +58,33 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
     return this;
   }
 
-  /**
-   * @description get the array
-   */
-  get(): T[] {
+  *[Symbol.iterator](): Iterator<T> {
+    for (const item of this.array) {
+      yield item;
+    }
+  }
+
+  toObject(): Record<IdKeyType, T> {
+    const object: Record<IdKeyType, T> = {};
+    for (const item of this.array) {
+      object[this._idGetter(item)] = item;
+    }
+    return object;
+  }
+
+  toMap(): Map<IdKeyType, T> {
+    const map = new Map<IdKeyType, T>();
+    for (const item of this.array) {
+      map.set(this._idGetter(item), item);
+    }
+    return map;
+  }
+
+  toSet(): Set<T> {
+    return new Set(this.array);
+  }
+
+  toArray(): T[] {
     return this.array;
   }
 
@@ -93,7 +117,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   /**
-   * @description update an item or itens, based on a predicate and a update (partial type or callback)
+   * @description update an item or items, based on a predicate and a update (partial type or callback)
    * @param idOrPredicate
    * @param partialOrCallback
    */
@@ -160,13 +184,13 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param index
    */
   insert(item: T | T[], index: number): this {
-    const itens = coerceArray(item);
-    this.array = [...this.array.slice(0, index), ...itens, ...this.array.slice(index)];
+    const items = coerceArray(item);
+    this.array = [...this.array.slice(0, index), ...items, ...this.array.slice(index)];
     return this;
   }
 
   /**
-   * @description remove item or itens of the array, based on the id, ids or predicate
+   * @description remove item or items of the array, based on the id, ids or predicate
    * @param idOrPredicate
    */
   remove(idOrPredicate: IdKeyType | IdKeyType[] | ArrayUtilPredicate<T>): this {
@@ -183,7 +207,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   /**
-   * @description remove item or itens based in the index/indices
+   * @description remove item or items based in the index/indices
    * @param index
    */
   removeByIndex(index: number | number[]): this {
@@ -244,6 +268,11 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   uniqWith(comparator: (valueA: T, valueB: T) => boolean): this {
     this.array = uniqWith(this.array, comparator);
+    return this;
+  }
+
+  rotate(rotations: number): this {
+    this.array = arrayRotate(this.array, rotations);
     return this;
   }
 }
