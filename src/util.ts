@@ -62,7 +62,7 @@ export function isMap(value: any): value is Map<any, any> {
   return Object.prototype.toString.call(value) === '[object Map]';
 }
 
-export function normalizeString(str: string): string {
+export function normalizeString(str: any): string {
   return (str ?? '')
     .toString()
     .normalize('NFD')
