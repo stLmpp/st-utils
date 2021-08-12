@@ -15,3 +15,4 @@ export * from './sample';
 export * from './array-remove';
 export * from './round';
 export * from './array-rotate';
+export * from './array-search';
