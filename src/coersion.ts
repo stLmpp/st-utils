@@ -12,12 +12,12 @@ export function coerceBooleanProperty(value: BooleanInput): boolean {
 }
 
 export function coerceNumberProperty(value: NumberInput, fallback = 0): number {
+  if (isNil(value) || Number.isNaN(value)) {
+    return fallback;
+  }
   if (isNumber(value)) {
     return value;
   }
-  if (isNil(value)) {
-    return fallback;
-  }
   const parsed = parseFloat(value);
-  return isNaN(parsed) ? fallback : parsed;
+  return Number.isNaN(parsed) ? fallback : parsed;
 }
