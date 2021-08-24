@@ -1,6 +1,6 @@
 {
   "name": "st-utils",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "description": "Utils",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -13,17 +13,17 @@
   "author": "stLmpp",
   "license": "ISC",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "~4.29.1",
-    "@typescript-eslint/parser": "~4.29.1",
+    "@typescript-eslint/eslint-plugin": "~4.29.3",
+    "@typescript-eslint/parser": "~4.29.3",
     "eslint": "~7.32.0",
     "eslint-config-prettier": "~8.3.0",
-    "eslint-plugin-import": "~2.24.0",
+    "eslint-plugin-import": "~2.24.1",
     "prettier": "~2.3.2",
     "tslib": "~2.3.1",
     "typescript": "~4.3.5"
   },
   "dependencies": {
     "fast-sort": "~3.0.2",
-    "type-fest": "~2.0.0"
+    "type-fest": "~2.1.0"
   }
 }
