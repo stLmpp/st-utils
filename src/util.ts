@@ -69,9 +69,9 @@ export function normalizeString(str: any): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
-export function isObjectEqualShallow(
-  objectA: Record<any, any> | null | undefined,
-  objectB: Record<any, any> | null | undefined
+export function isObjectEqualShallow<T extends Record<any, any>>(
+  objectA: T | null | undefined,
+  objectB: T | null | undefined
 ): boolean {
   if (objectA === objectB) {
     return true;
