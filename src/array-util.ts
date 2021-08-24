@@ -36,10 +36,10 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   private readonly _idGetter: IdGetterFn<T>;
 
-  private _upsertOne(id: IdKeyType, partial: T | Partial<T>): this {
+  private _upsertOne(id: IdKeyType, partial: T | Partial<T> | ((entity: T | undefined) => T)): this {
     const itemIndex = this.array.findIndex(item => this._idGetter(item) === id);
     if (itemIndex === -1) {
-      return this.append({ ...(partial as T) });
+      return this.append(isFunction(partial) ? partial(undefined) : (partial as T));
     } else {
       return this.update(id, partial);
     }
@@ -151,7 +151,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param idOrItems
    * @param partial
    */
-  upsert(idOrItems: IdKeyType | (T | Partial<T>)[], partial?: T | Partial<T>): this {
+  upsert(idOrItems: IdKeyType | (T | Partial<T>)[], partial?: T | Partial<T> | ((entity: T | undefined) => T)): this {
     if (isArray(idOrItems)) {
       this._upsertMany(idOrItems);
     } else if (partial) {
