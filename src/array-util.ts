@@ -277,9 +277,14 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 }
 
+export function arrayUtil<T extends { id: number }, K extends keyof T>(array: T[]): ArrayUtil<T, K>;
 export function arrayUtil<T extends Record<any, any>, K extends keyof T>(
   array: T[],
   idGetter: IdGetter<T, K>
+): ArrayUtil<T, K>;
+export function arrayUtil<T extends Record<any, any>, K extends keyof T>(
+  array: T[],
+  idGetter?: IdGetter<T, K>
 ): ArrayUtil<T, K> {
-  return new ArrayUtil<T, K>(array, idGetter);
+  return new ArrayUtil<T, K>(array, idGetter ?? ('id' as K));
 }
