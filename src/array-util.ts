@@ -6,6 +6,7 @@ import { sample } from './sample';
 import { arrayAt } from './array-at';
 import { arrayRemove } from './array-remove';
 import { arrayRotate } from './array-rotate';
+import { arrayMoveImmutable } from 'array-move';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -261,6 +262,11 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
     return sample(this.array);
   }
 
+  uniq(): this {
+    this.array = uniqBy(this.array, this._idGetter);
+    return this;
+  }
+
   uniqBy(key: keyof T): this {
     this.array = uniqBy(this.array, key);
     return this;
@@ -273,6 +279,11 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   rotate(rotations: number): this {
     this.array = arrayRotate(this.array, rotations);
+    return this;
+  }
+
+  move(fromIndex: number, toIndex: number): this {
+    this.array = arrayMoveImmutable(this.array, fromIndex, toIndex);
     return this;
   }
 }

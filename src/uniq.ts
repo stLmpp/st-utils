@@ -1,11 +1,14 @@
+import { isFunction } from './util';
+
 export function uniq<T>(value: T[]): T[] {
   return [...new Set(value)];
 }
 
-export function uniqBy<T extends Record<any, any>, K extends keyof T>(array: T[], key: K): T[] {
+export function uniqBy<T extends Record<any, any>, K extends keyof T>(array: T[], key: K | ((item: T) => T[K])): T[] {
+  const predicate = isFunction(key) ? key : (item: T) => item[key];
   const map = new Map<T[K], T>();
   for (const item of array) {
-    const itemKey = item[key];
+    const itemKey = predicate(item);
     if (!map.has(itemKey)) {
       map.set(itemKey, item);
     }
