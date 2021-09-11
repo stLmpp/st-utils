@@ -26,6 +26,7 @@ export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(get
 
 export type ArrayUtilPredicate<T extends Record<any, any>> = (entity: T, index: number, array: T[]) => boolean;
 export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: number, array: T[]) => T;
+export type ArrayUtilVoidCallback<T extends Record<any, any>> = (entity: T, index: number, array: T[]) => void;
 
 /**
  * @description a set of utilities to modify arrays of object with immutability
@@ -285,6 +286,66 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   move(fromIndex: number, toIndex: number): this {
     this.array = arrayMoveImmutable(this.array, fromIndex, toIndex);
     return this;
+  }
+
+  every(predicate: ArrayUtilPredicate<T>): boolean {
+    return this.array.every(predicate);
+  }
+
+  filter(predicate: ArrayUtilPredicate<T>): this {
+    this.array = this.array.filter(predicate);
+    return this;
+  }
+
+  find(predicate: ArrayUtilPredicate<T>): T | undefined {
+    return this.array.find(predicate);
+  }
+
+  findLast(predicate: ArrayUtilPredicate<T>): T | undefined {
+    let index = this.array.length;
+    while (index--) {
+      const item = this.array[index];
+      if (predicate(item, index, this.array)) {
+        return item;
+      }
+    }
+    return undefined;
+  }
+
+  findIndex(predicate: ArrayUtilPredicate<T>): number {
+    return this.array.findIndex(predicate);
+  }
+
+  getIndexOf(id: IdKeyType): number {
+    return this.array.findIndex(item => this._idGetter(item) === id);
+  }
+
+  forEach(callback: ArrayUtilVoidCallback<T>): this {
+    this.array.forEach(callback);
+    return this;
+  }
+
+  has(id: IdKeyType): boolean {
+    return this.array.some(item => this._idGetter(item) === id);
+  }
+
+  map(callback: ArrayUtilUpdate<T>): this {
+    this.array = this.array.map(callback);
+    return this;
+  }
+
+  reverse(): this {
+    this.array = [...this.array.reverse()];
+    return this;
+  }
+
+  slice(start?: number, end?: number): this {
+    this.array = this.array.slice(start, end);
+    return this;
+  }
+
+  some(predicate: ArrayUtilPredicate<T>): boolean {
+    return this.array.some(predicate);
   }
 }
 
