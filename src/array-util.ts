@@ -6,7 +6,7 @@ import { sample } from './sample';
 import { arrayAt } from './array-at';
 import { arrayRemove } from './array-remove';
 import { arrayRotate } from './array-rotate';
-import { arrayMoveImmutable } from 'array-move';
+import arrayMove from 'array-move';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -284,7 +284,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   move(fromIndex: number, toIndex: number): this {
-    this.array = arrayMoveImmutable(this.array, fromIndex, toIndex);
+    this.array = arrayMove(this.array, fromIndex, toIndex);
     return this;
   }
 
