@@ -24,15 +24,15 @@ export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(get
   }
 }
 
-export type ArrayUtilPredicate<T extends Record<any, any>> = (entity: T, index: number, array: T[]) => boolean;
-export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: number, array: T[]) => T;
-export type ArrayUtilVoidCallback<T extends Record<any, any>> = (entity: T, index: number, array: T[]) => void;
+export type ArrayUtilPredicate<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => boolean;
+export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => T;
+export type ArrayUtilVoidCallback<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => void;
 
 /**
  * @description a set of utilities to modify arrays of object with immutability
  */
 export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> implements Iterable<T> {
-  constructor(private array: T[], idGetter: IdGetter<T, K>) {
+  constructor(private array: readonly T[], idGetter: IdGetter<T, K>) {
     this._idGetter = parseIdGetter(idGetter);
   }
 
@@ -87,7 +87,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   toArray(): T[] {
-    return this.array;
+    return this.array.slice();
   }
 
   /**
@@ -185,7 +185,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param item
    * @param index
    */
-  insert(item: T | T[], index: number): this {
+  insert(item: T | readonly T[], index: number): this {
     const items = coerceArray(item);
     this.array = [...this.array.slice(0, index), ...items, ...this.array.slice(index)];
     return this;
@@ -335,7 +335,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   reverse(): this {
-    this.array = [...this.array.reverse()];
+    this.array = [...this.toArray().reverse()];
     return this;
   }
 
@@ -349,13 +349,13 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 }
 
-export function arrayUtil<T extends { id: number }, K extends keyof T>(array: T[]): ArrayUtil<T, K>;
+export function arrayUtil<T extends { id: number }, K extends keyof T>(array: readonly T[]): ArrayUtil<T, K>;
 export function arrayUtil<T extends Record<any, any>, K extends keyof T>(
-  array: T[],
+  array: readonly T[],
   idGetter: IdGetter<T, K>
 ): ArrayUtil<T, K>;
 export function arrayUtil<T extends Record<any, any>, K extends keyof T>(
-  array: T[],
+  array: readonly T[],
   idGetter?: IdGetter<T, K>
 ): ArrayUtil<T, K> {
   return new ArrayUtil<T, K>(array, idGetter ?? ('id' as K));

@@ -10,7 +10,7 @@ export function isNumber(value: any): value is number {
   return typeof value === 'number';
 }
 
-export function isArray(value: any): value is any[] {
+export function isArray(value: any): value is any[] | readonly any[] {
   return Array.isArray(value);
 }
 

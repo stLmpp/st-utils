@@ -1,10 +1,10 @@
 import { isFunction } from './util';
 
-export function uniq<T>(value: T[]): T[] {
+export function uniq<T>(value: readonly T[]): T[] {
   return [...new Set(value)];
 }
 
-export function uniqBy<T extends Record<any, any>, K extends keyof T>(array: T[], key: K | ((item: T) => T[K])): T[] {
+export function uniqBy<T extends Record<any, any>, K extends keyof T>(array: readonly T[], key: K | ((item: T) => T[K])): T[] {
   const predicate = isFunction(key) ? key : (item: T) => item[key];
   const map = new Map<T[K], T>();
   for (const item of array) {
@@ -16,7 +16,7 @@ export function uniqBy<T extends Record<any, any>, K extends keyof T>(array: T[]
   return [...map.values()];
 }
 
-export function uniqWith<T>(array: T[], comparator: (valueA: T, valueB: T) => boolean): T[] {
+export function uniqWith<T>(array: readonly T[], comparator: (valueA: T, valueB: T) => boolean): T[] {
   const set = new Set<number>();
   const len = array.length;
   for (let i = 0; i < len; i++) {

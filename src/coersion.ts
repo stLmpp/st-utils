@@ -1,10 +1,8 @@
 import { isArray, isNil, isNumber } from './util';
 import { BooleanInput, NumberInput } from './type';
 
-export function coerceArray<T>(value: T | T[]): T[];
-export function coerceArray<T>(value: T | readonly T[]): readonly T[];
-export function coerceArray<T>(value: T | T[]): T[] {
-  return isArray(value) ? value : [value];
+export function coerceArray<T>(value: T | readonly T[]): T[] {
+  return isArray(value) ? value.slice() : [value];
 }
 
 export function coerceBooleanProperty(value: BooleanInput): boolean {

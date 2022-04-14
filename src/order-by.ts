@@ -10,7 +10,7 @@ export type OrderByType<T, K extends keyof T = keyof T> =
 export type OrderByDirection = 'asc' | 'desc';
 
 export function orderBy<T, K extends keyof T>(
-  values: T[],
+  values: readonly T[],
   keyOrCommand?: OrderByType<T>,
   order: OrderByDirection = 'asc'
 ): T[] {

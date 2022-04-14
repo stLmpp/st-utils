@@ -1,12 +1,12 @@
 import { isArray, isFunction, normalizeString } from './util';
 
 export function arraySearch<T, K extends keyof T>(
-  array: T[],
-  keyOrKeysOrCallback: K | K[] | ((item: T) => T[K]),
+  array: readonly T[],
+  keyOrKeysOrCallback: K | readonly K[] | ((item: T) => T[K]),
   _term: string | null | undefined
 ): T[] {
   if (!_term) {
-    return array;
+    return array.slice();
   }
   let predicate: (entity: T) => boolean;
   const term = normalizeString(_term).toLowerCase();
