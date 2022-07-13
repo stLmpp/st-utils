@@ -104,3 +104,7 @@ export function getFirstKey<T extends Record<any, any>>(object: T): keyof T | un
 export function isBoolean(value: any): value is boolean {
   return typeof value === 'boolean';
 }
+
+export function isPlainObject(value: any): value is Record<string | number | symbol, any> {
+  return isObject(value) && value.constructor === Object && Object.getPrototypeOf(value) === Object.prototype;
+}
