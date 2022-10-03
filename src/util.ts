@@ -108,3 +108,7 @@ export function isBoolean(value: any): value is boolean {
 export function isPlainObject(value: any): value is Record<string | number | symbol, any> {
   return isObject(value) && value.constructor === Object && Object.getPrototypeOf(value) === Object.prototype;
 }
+
+export function isIterable<T>(value: any): value is Iterable<T> {
+  return !isNull(value) && isFunction(value[Symbol.iterator]);
+}

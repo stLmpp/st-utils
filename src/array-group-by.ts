@@ -37,26 +37,26 @@ function groupByObject<T extends Record<any, any>, K extends ConditionalKeys<T, 
   return grouped as GroupedObject<T, K>;
 }
 
-export function groupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
+export function arrayGroupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
   array: readonly T[],
   key: K
 ): GroupedTuple<T, K>;
-export function groupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
+export function arrayGroupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
   array: readonly T[],
   key: K,
   returnType: 'tuple'
 ): GroupedTuple<T, K>;
-export function groupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
+export function arrayGroupBy<T extends Record<any, any> = Record<any, any>, K extends keyof T = keyof T>(
   array: readonly T[],
   key: K,
   returnType: 'map'
 ): GroupedMap<T, K>;
-export function groupBy<T extends Record<any, any>, K extends ConditionalKeys<T, KeyType>>(
+export function arrayGroupBy<T extends Record<any, any>, K extends ConditionalKeys<T, KeyType>>(
   array: readonly T[],
   key: K,
   returnType: 'object'
 ): GroupedObject<T, K>;
-export function groupBy(
+export function arrayGroupBy(
   array: readonly any[],
   key: any,
   returnType?: GroupedReturnType
