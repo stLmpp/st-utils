@@ -4,7 +4,11 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['plugin:@typescript-eslint/eslint-recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  extends: [
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+  ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
@@ -14,7 +18,7 @@ module.exports = {
   rules: {
     'object-shorthand': ['error'],
     'object-curly-spacing': ['error', 'always'],
-    'arrow-parens': ['error', 'as-needed'],
+    'arrow-parens': ['error', 'always'],
     'brace-style': ['off', 'off'],
     'id-blacklist': 'off',
     'id-match': 'off',
@@ -24,7 +28,10 @@ module.exports = {
     'newline-per-chained-call': 'off',
     'no-extra-semi': 'off',
     'no-irregular-whitespace': 'off',
-    'no-trailing-spaces': ['error', { ignoreComments: true, skipBlankLines: true }],
+    'no-trailing-spaces': [
+      'error',
+      { ignoreComments: true, skipBlankLines: true },
+    ],
     'no-underscore-dangle': 'off',
     'space-in-parens': ['off', 'never'],
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
@@ -45,7 +52,10 @@ module.exports = {
     'prefer-arrow-callback': ['error'],
     'prefer-arrow/prefer-arrow-functions': ['off'],
     'no-shadow': ['off'],
-    '@typescript-eslint/explicit-member-accessibility': ['off', { accessibility: 'explicit' }],
+    '@typescript-eslint/explicit-member-accessibility': [
+      'off',
+      { accessibility: 'explicit' },
+    ],
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/unified-signatures': 'off',
     '@typescript-eslint/no-useless-constructor': ['off'],

@@ -1,5 +1,8 @@
 import { isFunction } from './util';
 
+/**
+ * @public
+ */
 export function arrayUniqBy<T extends Record<any, any>, K extends keyof T>(
   array: readonly T[],
   key: K | ((item: T) => T[K])

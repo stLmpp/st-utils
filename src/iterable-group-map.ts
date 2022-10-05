@@ -1,7 +1,16 @@
 import { isNil } from './util';
 
-export function iterableGroupMap(iterable: null | undefined, callback: any): null;
-export function iterableGroupMap<T, R>(iterable: Iterable<T>, callback: (item: T) => R): Map<R, T[]>;
+/**
+ * @public
+ */
+export function iterableGroupMap(
+  iterable: null | undefined,
+  callback: any
+): null;
+export function iterableGroupMap<T, R>(
+  iterable: Iterable<T>,
+  callback: (item: T) => R
+): Map<R, T[]>;
 export function iterableGroupMap<T, R>(
   iterable: Iterable<T> | null | undefined,
   callback: (item: T) => R

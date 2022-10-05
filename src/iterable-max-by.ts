@@ -1,5 +1,8 @@
 import { isNil } from './util';
 
+/**
+ * @public
+ */
 export function iterableMaxBy(iterable: null | undefined, callback: any): null;
 export function iterableMaxBy<T>(
   iterable: Iterable<T> | null | undefined,

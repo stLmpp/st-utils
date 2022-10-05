@@ -9,40 +9,88 @@ import { arrayUniqBy } from './array-uniq-by';
 import { arrayUniqWith } from './array-uniq-with';
 import { coerceArray } from './coerce-array';
 
+/**
+ * @public
+ */
 export type IdKeyType = number | string;
-export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
-export type IdGetter<T extends Record<any, any>, K extends keyof T> = K | IdGetterFn<T>;
 
 /**
- * @description used to parse an IdGetter (keyof or predicate)
- * @param getter
+ * @public
  */
-export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(getter: IdGetter<T, K>): IdGetterFn<T> {
+export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
+
+/**
+ * @public
+ */
+export type IdGetter<T extends Record<any, any>, K extends keyof T> =
+  | K
+  | IdGetterFn<T>;
+
+/**
+ * @public
+ * @description used to parse an IdGetter (keyof or predicate)
+ */
+export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(
+  getter: IdGetter<T, K>
+): IdGetterFn<T> {
   if (isFunction(getter)) {
     return getter;
   } else {
-    return entity => entity[getter];
+    return (entity) => entity[getter];
   }
 }
 
-export type ArrayUtilPredicate<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => boolean;
-export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => T;
-export type ArrayUtilVoidCallback<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => void;
+/**
+ * @public
+ */
+export type ArrayUtilPredicate<T extends Record<any, any>> = (
+  entity: T,
+  index: number,
+  array: readonly T[]
+) => boolean;
 
 /**
+ * @public
+ */
+export type ArrayUtilUpdate<T extends Record<any, any>> = (
+  entity: T,
+  index: number,
+  array: readonly T[]
+) => T;
+
+/**
+ * @public
+ */
+export type ArrayUtilVoidCallback<T extends Record<any, any>> = (
+  entity: T,
+  index: number,
+  array: readonly T[]
+) => void;
+
+/**
+ * @public
  * @description a set of utilities to modify arrays of object with immutability
  */
-export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> implements Iterable<T> {
+export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T>
+  implements Iterable<T>
+{
   constructor(private array: readonly T[], idGetter: IdGetter<T, K>) {
     this._idGetter = parseIdGetter(idGetter);
   }
 
   private readonly _idGetter: IdGetterFn<T>;
 
-  private _upsertOne(id: IdKeyType, partial: T | Partial<T> | ((entity: T | undefined) => T)): this {
-    const itemIndex = this.array.findIndex(item => this._idGetter(item) === id);
+  private _upsertOne(
+    id: IdKeyType,
+    partial: T | Partial<T> | ((entity: T | undefined) => T)
+  ): this {
+    const itemIndex = this.array.findIndex(
+      (item) => this._idGetter(item) === id
+    );
     if (itemIndex === -1) {
-      return this.append(isFunction(partial) ? partial(undefined) : (partial as T));
+      return this.append(
+        isFunction(partial) ? partial(undefined) : (partial as T)
+      );
     } else {
       return this.update(id, partial);
     }
@@ -51,7 +99,9 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   private _upsertMany(items: (T | Partial<T>)[]): this {
     for (const item of items) {
       const id = this._idGetter(item as T);
-      const itemIndex = this.array.findIndex(itemArr => this._idGetter(itemArr) === id);
+      const itemIndex = this.array.findIndex(
+        (itemArr) => this._idGetter(itemArr) === id
+      );
       if (itemIndex === -1) {
         this.append(item as T);
       } else {
@@ -93,18 +143,18 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description get one based on the id
-   * @param id
    */
   getOne(id: IdKeyType): T | undefined {
-    return this.array.find(item => this._idGetter(item) === id);
+    return this.array.find((item) => this._idGetter(item) === id);
   }
 
   /**
    * @description try to get one based on the id, if not found throw an error
-   * @param id
    */
   getOneOrFail(id: IdKeyType): T {
-    const itemIndex = this.array.findIndex(item => this._idGetter(item) === id);
+    const itemIndex = this.array.findIndex(
+      (item) => this._idGetter(item) === id
+    );
     if (itemIndex === -1) {
       throw new Error(`Item not found with id ${id.toString()}`);
     }
@@ -113,16 +163,13 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description get many items based on ids
-   * @param ids
    */
   getMany(ids: IdKeyType[]): T[] {
-    return this.array.filter(item => ids.includes(this._idGetter(item)));
+    return this.array.filter((item) => ids.includes(this._idGetter(item)));
   }
 
   /**
    * @description update an item or items, based on a predicate and a update (partial type or callback)
-   * @param idOrPredicate
-   * @param partialOrCallback
    */
   update(
     idOrPredicate: IdKeyType | IdKeyType[] | ArrayUtilPredicate<T>,
@@ -132,13 +179,13 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
     if (isFunction(idOrPredicate)) {
       predicate = idOrPredicate;
     } else if (isArray(idOrPredicate)) {
-      predicate = entity => idOrPredicate.includes(this._idGetter(entity));
+      predicate = (entity) => idOrPredicate.includes(this._idGetter(entity));
     } else {
-      predicate = entity => this._idGetter(entity) === idOrPredicate;
+      predicate = (entity) => this._idGetter(entity) === idOrPredicate;
     }
     const update: ArrayUtilUpdate<T> = isFunction(partialOrCallback)
       ? partialOrCallback
-      : entity => ({ ...entity, ...partialOrCallback });
+      : (entity) => ({ ...entity, ...partialOrCallback });
     this.array = this.array.map((item, index, array) => {
       if (predicate(item, index, array)) {
         item = update(item, index, array);
@@ -151,10 +198,11 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   /**
    * @description used to upsert items in the array
    * ** if using multiple items to upsert, make sure the id or ids are set in the array **
-   * @param idOrItems
-   * @param partial
    */
-  upsert(idOrItems: IdKeyType | (T | Partial<T>)[], partial?: T | Partial<T> | ((entity: T | undefined) => T)): this {
+  upsert(
+    idOrItems: IdKeyType | (T | Partial<T>)[],
+    partial?: T | Partial<T> | ((entity: T | undefined) => T)
+  ): this {
     if (isArray(idOrItems)) {
       this._upsertMany(idOrItems);
     } else if (partial) {
@@ -165,7 +213,6 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description add item to end of array
-   * @param item
    */
   append(item: T): this {
     this.array = [...this.array, item];
@@ -174,7 +221,6 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description add item to start of array
-   * @param item
    */
   prepend(item: T): this {
     this.array = [item, ...this.array];
@@ -183,27 +229,28 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description insert item to specified index of array
-   * @param item
-   * @param index
    */
   insert(item: T | readonly T[], index: number): this {
     const items = coerceArray(item);
-    this.array = [...this.array.slice(0, index), ...items, ...this.array.slice(index)];
+    this.array = [
+      ...this.array.slice(0, index),
+      ...items,
+      ...this.array.slice(index),
+    ];
     return this;
   }
 
   /**
    * @description remove item or items of the array, based on the id, ids or predicate
-   * @param idOrPredicate
    */
   remove(idOrPredicate: IdKeyType | IdKeyType[] | ArrayUtilPredicate<T>): this {
     let predicate: ArrayUtilPredicate<T>;
     if (isFunction(idOrPredicate)) {
       predicate = idOrPredicate;
     } else if (isArray(idOrPredicate)) {
-      predicate = entity => idOrPredicate.includes(this._idGetter(entity));
+      predicate = (entity) => idOrPredicate.includes(this._idGetter(entity));
     } else {
-      predicate = entity => this._idGetter(entity) === idOrPredicate;
+      predicate = (entity) => this._idGetter(entity) === idOrPredicate;
     }
     this.array = arrayRemove(this.array, predicate);
     return this;
@@ -211,7 +258,6 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description remove item or items based in the index/indices
-   * @param index
    */
   removeByIndex(index: number | number[]): this {
     const indices = new Set(coerceArray(index));
@@ -220,7 +266,6 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description get item of array based in the relative index
-   * @param index
    */
   at(index: number): T | undefined {
     return arrayAt(this.array, index);
@@ -228,8 +273,6 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
 
   /**
    * @description sort the array based on a number of options
-   * @param order
-   * @param direction
    */
   orderBy(order?: OrderByType<T>, direction?: OrderByDirection): this {
     this.array = arrayOrderBy(this.array, order, direction);
@@ -318,7 +361,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   getIndexOf(id: IdKeyType): number {
-    return this.array.findIndex(item => this._idGetter(item) === id);
+    return this.array.findIndex((item) => this._idGetter(item) === id);
   }
 
   forEach(callback: ArrayUtilVoidCallback<T>): this {
@@ -327,7 +370,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   has(id: IdKeyType): boolean {
-    return this.array.some(item => this._idGetter(item) === id);
+    return this.array.some((item) => this._idGetter(item) === id);
   }
 
   map(callback: ArrayUtilUpdate<T>): this {
@@ -350,7 +393,12 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 }
 
-export function arrayUtil<T extends { id: number }, K extends keyof T>(array: readonly T[]): ArrayUtil<T, K>;
+/**
+ * @public
+ */
+export function arrayUtil<T extends { id: number }, K extends keyof T>(
+  array: readonly T[]
+): ArrayUtil<T, K>;
 export function arrayUtil<T extends Record<any, any>, K extends keyof T>(
   array: readonly T[],
   idGetter: IdGetter<T, K>

@@ -1,6 +1,9 @@
 import { isNil, isNumber } from './util';
 import { NumberInput } from './type';
 
+/**
+ * @public
+ */
 export function coerceNumberProperty(value: NumberInput, fallback = 0): number {
   if (isNil(value) || Number.isNaN(value)) {
     return fallback;

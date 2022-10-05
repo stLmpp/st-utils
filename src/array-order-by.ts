@@ -9,6 +9,9 @@ export type OrderByType<T, K extends keyof T = keyof T> =
 
 export type OrderByDirection = 'asc' | 'desc';
 
+/**
+ * @public
+ */
 export function arrayOrderBy<T, K extends keyof T>(
   values: readonly T[],
   keyOrCommand?: OrderByType<T>,
@@ -20,13 +23,19 @@ export function arrayOrderBy<T, K extends keyof T>(
   } else if (isKeyof<T, K>(keyOrCommand)) {
     return sort(values)[order](keyOrCommand);
   } else if (isArray(keyOrCommand)) {
-    return sort(values)[order](keyOrCommand.map(command => (isFunction(command) ? command : item => item[command])));
+    return sort(values)[order](
+      keyOrCommand.map((command) =>
+        isFunction(command) ? command : (item) => item[command]
+      )
+    );
   } else if (isFunction(keyOrCommand)) {
     return sort(values)[order](keyOrCommand);
   } else {
     const commands = keyOrCommand as Record<K, OrderByDirection>;
     const commandsEntries = Object.entries(commands) as [K, OrderByDirection][];
-    const commandsArray = commandsEntries.map(([key, value]) => ({ [value]: key })) as Record<OrderByDirection, K>[];
+    const commandsArray = commandsEntries.map(([key, value]) => ({
+      [value]: key,
+    })) as Record<OrderByDirection, K>[];
     return sort(values).by(commandsArray);
   }
 }

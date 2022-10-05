@@ -7,7 +7,9 @@
   "types": "dist/types/index.d.ts",
   "scripts": {
     "build": "rimraf ./dist && tsc -p tsconfig.json && tsc -p tsconfig.common.json",
-    "start": "rimraf ./dist && tsc -w"
+    "start": "rimraf ./dist && tsc -w",
+    "build-types": "tsc --emitDeclarationOnly",
+    "api-extractor": "api-extractor run --local --verbose"
   },
   "keywords": [],
   "author": "stLmpp",
@@ -17,7 +19,8 @@
     "url": "https://github.com/stLmpp/st-utils"
   },
   "devDependencies": {
-    "@types/node": "14.x.x",
+    "@microsoft/api-extractor": "^7.32.0",
+    "@types/node": "~14.18.31",
     "@typescript-eslint/eslint-plugin": "~5.30.6",
     "@typescript-eslint/parser": "~5.30.6",
     "esbuild": "^0.15.10",

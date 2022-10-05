@@ -8,6 +8,9 @@ function arrayAtInternal<T>(array: readonly T[], index: number): T | undefined {
   return array[index];
 }
 
+/**
+ * @public
+ */
 export function arrayAt<T>(array: readonly T[], index: number): T | undefined {
   if (isFunction(Array.prototype.at)) {
     return array.at(index);

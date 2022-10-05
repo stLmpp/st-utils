@@ -1,4 +1,10 @@
-export function arrayUniqWith<T>(array: readonly T[], comparator: (valueA: T, valueB: T) => boolean): T[] {
+/**
+ * @public
+ */
+export function arrayUniqWith<T>(
+  array: readonly T[],
+  comparator: (valueA: T, valueB: T) => boolean
+): T[] {
   const set = new Set<number>();
   const len = array.length;
   for (let i = 0; i < len; i++) {

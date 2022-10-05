@@ -1,7 +1,13 @@
 import { isNil } from './util';
 
+/**
+ * @public
+ */
 export type IterableGroupKeysType = string | number | symbol;
 
+/**
+ * @public
+ */
 export function iterableGroup(iterable: null | undefined, callback: any): null;
 export function iterableGroup<T, R extends IterableGroupKeysType>(
   iterable: Iterable<T> | null | undefined,
