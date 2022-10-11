@@ -1,12 +1,5 @@
-export function arrayMinBy<T extends Record<any, any>>(
-  array: readonly T[],
-  callback: (item: T) => number | null | undefined
-): T;
-export function arrayMinBy(array: null | undefined, callback: any): null;
-export function arrayMinBy<T>(
-  array: readonly T[] | null | undefined,
-  callback: (item: T) => number | null | undefined
-): T | null;
+import { isNull } from './is-null';
+
 export function arrayMinBy<T>(
   array: readonly T[] | null | undefined,
   callback: (item: T) => number | null | undefined
@@ -15,5 +8,10 @@ export function arrayMinBy<T>(
     return null;
   }
   const getter = (item: T): number => callback(item) ?? Infinity;
-  return array.reduce((acc, item) => (getter(item) < getter(acc) ? item : acc), array[0]);
+  return array.reduce((acc: T | null, item) => {
+    if (isNull(acc)) {
+      return item;
+    }
+    return getter(item) < getter(acc) ? item : acc;
+  }, null);
 }

@@ -1,6 +1,4 @@
 export function arrayMin(array: readonly number[] | null | undefined): number {
-  if (!array) {
-    return 0;
-  }
+  array ??= [];
   return Math.min(...array);
 }

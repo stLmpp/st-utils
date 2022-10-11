@@ -1,8 +1,10 @@
-import { ConditionalKeys } from 'type-fest';
+import { ArrayCallback } from './type';
 
-export function arraySumBy<T extends Record<any, any>, K extends ConditionalKeys<T, number | null | undefined>>(
-  array: readonly T[],
-  key: K
+export function arraySumBy<T>(
+  array: readonly T[] | null | undefined,
+  callback: ArrayCallback<T, number | null | undefined>
 ): number {
-  return array.reduce((acc, item) => acc + (item[key] ?? 0), 0);
+  array ??= [];
+  const getter: ArrayCallback<T, number> = (item, index, _array) => callback(item, index, _array) ?? 0;
+  return array.reduce((acc, item, index, _array) => acc + getter(item, index, _array), 0);
 }

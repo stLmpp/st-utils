@@ -1,24 +1,26 @@
 import { isArray } from './is-array';
-import { isFunction } from './is-function';
 import { normalizeString } from './normalize-string';
+import { ArrayCallback } from './type';
 
-export function arraySearch<T, K extends keyof T>(
-  array: readonly T[],
-  keyOrKeysOrCallback: K | readonly K[] | ((item: T) => T[K]),
-  _term: string | null | undefined
+export function arraySearch<T>(
+  array: readonly T[] | null | undefined,
+  callbackOrCallbacks: ArrayCallback<T, unknown> | ArrayCallback<T, unknown>[],
+  term: string | null | undefined
 ): T[] {
-  if (!_term) {
-    return array.slice();
+  if (!term || !array) {
+    array ??= [];
+    return [...array];
   }
-  let predicate: (entity: T) => boolean;
-  const term = normalizeString(_term).toLowerCase();
-  if (isFunction(keyOrKeysOrCallback)) {
-    predicate = (entity) => normalizeString(keyOrKeysOrCallback(entity)).toLowerCase().includes(term);
-  } else if (isArray(keyOrKeysOrCallback)) {
-    predicate = (entity) =>
-      keyOrKeysOrCallback.some((key) => normalizeString(entity[key]).toLowerCase().includes(term));
+  const normalizedTerm = normalizeString(term).toLowerCase();
+  let predicate: ArrayCallback<T, boolean>;
+  if (isArray(callbackOrCallbacks)) {
+    predicate = (entity, index, _array) =>
+      callbackOrCallbacks.some((callback) =>
+        normalizeString(callback(entity, index, _array)).toLowerCase().includes(normalizedTerm)
+      );
   } else {
-    predicate = (entity) => normalizeString(entity[keyOrKeysOrCallback]).toLowerCase().includes(term);
+    predicate = (entity, index, _array) =>
+      normalizeString(callbackOrCallbacks(entity, index, _array)).toLowerCase().includes(normalizedTerm);
   }
   return array.filter(predicate);
 }

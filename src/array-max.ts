@@ -1,6 +1,4 @@
 export function arrayMax(array: readonly number[] | null | undefined): number {
-  if (!array) {
-    return 0;
-  }
+  array ??= [];
   return Math.max(...array);
 }

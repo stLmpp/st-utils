@@ -1,4 +1,7 @@
-export function arrayRemoveMutate<T>(array: T[], predicate: (element: T, index: number, array: T[]) => boolean): T[] {
+import { ArrayCallback } from './type';
+
+export function arrayRemoveMutate<T>(array: T[] | null | undefined, predicate: ArrayCallback<T, unknown>): T[] {
+  array ??= [];
   const removed: T[] = [];
   let index = array.length;
   while (index--) {
