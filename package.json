@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc -p tsconfig.json && tsc -p tsconfig.common.json",
     "start": "tsc -w",
-    "test": "vitest"
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui --watch"
   },
   "keywords": [],
   "author": "stLmpp",
@@ -21,9 +23,11 @@
     "@typescript-eslint/eslint-plugin": "~5.40.0",
     "@typescript-eslint/parser": "~5.40.0",
     "@vitest/coverage-c8": "^0.24.1",
+    "@vitest/ui": "^0.24.1",
     "eslint": "~8.25.0",
     "eslint-config-prettier": "~8.5.0",
-    "eslint-plugin-import": "~2.26.0",
+    "eslint-import-resolver-typescript": "^3.5.1",
+    "eslint-plugin-import": "^2.26.0",
     "prettier": "~2.7.1",
     "tslib": "~2.4.0",
     "typescript": "~4.8.4",

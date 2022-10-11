@@ -1,6 +1,6 @@
 export function getFirstKey<T extends Record<any, any>>(object: T): keyof T | undefined {
   for (const key in object) {
-    if (object.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(object, key)) {
       return key;
     }
   }

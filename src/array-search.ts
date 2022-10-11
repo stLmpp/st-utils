@@ -13,11 +13,12 @@ export function arraySearch<T, K extends keyof T>(
   let predicate: (entity: T) => boolean;
   const term = normalizeString(_term).toLowerCase();
   if (isFunction(keyOrKeysOrCallback)) {
-    predicate = entity => normalizeString(keyOrKeysOrCallback(entity)).toLowerCase().includes(term);
+    predicate = (entity) => normalizeString(keyOrKeysOrCallback(entity)).toLowerCase().includes(term);
   } else if (isArray(keyOrKeysOrCallback)) {
-    predicate = entity => keyOrKeysOrCallback.some(key => normalizeString(entity[key]).toLowerCase().includes(term));
+    predicate = (entity) =>
+      keyOrKeysOrCallback.some((key) => normalizeString(entity[key]).toLowerCase().includes(term));
   } else {
-    predicate = entity => normalizeString(entity[keyOrKeysOrCallback]).toLowerCase().includes(term);
+    predicate = (entity) => normalizeString(entity[keyOrKeysOrCallback]).toLowerCase().includes(term);
   }
   return array.filter(predicate);
 }

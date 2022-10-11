@@ -8,9 +8,11 @@ export default defineConfig({
       functions: 80,
       lines: 80,
       statements: 80,
+      include: ['src/**/*.ts'],
       all: true,
     },
     include: ['src/**/*.spec.ts'],
     globals: true,
+    watch: false,
   },
 });
