@@ -1,4 +1,6 @@
-import { isArray, isFunction, normalizeString } from './util';
+import { isArray } from './is-array';
+import { isFunction } from './is-function';
+import { normalizeString } from './normalize-string';
 
 export function arraySearch<T, K extends keyof T>(
   array: readonly T[],

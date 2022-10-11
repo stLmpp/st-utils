@@ -1,12 +1,14 @@
-import { isArray, isFunction } from './util';
-import { coerceArray } from './coersion';
-import { orderBy, OrderByDirection, OrderByType } from './order-by';
-import { uniqBy, uniqWith } from './uniq';
-import { sample } from './sample';
+import { arraySample } from './array-sample';
 import { arrayAt } from './array-at';
 import { arrayRemove } from './array-remove';
 import { arrayRotate } from './array-rotate';
 import arrayMove from 'array-move';
+import { coerceArray } from './coerce-array';
+import { arrayUniqBy } from './array-uniq-by';
+import { arrayUniqWith } from './array-uniq-with';
+import { isArray } from './is-array';
+import { isFunction } from './is-function';
+import { sort } from 'fast-sort';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -230,8 +232,8 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @param order
    * @param direction
    */
-  orderBy(order?: OrderByType<T>, direction?: OrderByDirection): this {
-    this.array = orderBy(this.array, order, direction);
+  orderBy<Key extends keyof T>(order: Key, direction: 'asc' | 'desc' = 'asc'): this {
+    this.array = sort(this.array)[direction](order);
     return this;
   }
 
@@ -260,21 +262,21 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
    * @description get a random item from the array, returns undefined if the array is empty
    */
   sample(): T | undefined {
-    return sample(this.array);
+    return arraySample(this.array);
   }
 
   uniq(): this {
-    this.array = uniqBy(this.array, this._idGetter);
+    this.array = arrayUniqBy(this.array, this._idGetter);
     return this;
   }
 
   uniqBy(key: keyof T): this {
-    this.array = uniqBy(this.array, key);
+    this.array = arrayUniqBy(this.array, key);
     return this;
   }
 
   uniqWith(comparator: (valueA: T, valueB: T) => boolean): this {
-    this.array = uniqWith(this.array, comparator);
+    this.array = arrayUniqWith(this.array, comparator);
     return this;
   }
 
