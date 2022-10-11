@@ -12,10 +12,12 @@ describe.concurrent('array-group-tuple', () => {
   it('should group by object key', () => {
     const odd = { type: 'odd' };
     const even = { type: 'even' };
-    expect(arrayGroupTuple([1, 2, 3], (item) => (isOdd(item) ? odd : even))).toEqual([
-      [odd, [2]],
-      [even, [1, 3]],
-    ]);
+    expect(arrayGroupTuple([1, 2, 3], (item) => (isOdd(item) ? odd : even))).toEqual(
+      expect.arrayContaining([
+        [odd, [2]],
+        [even, [1, 3]],
+      ])
+    );
   });
 
   describe('undefined', () => {
