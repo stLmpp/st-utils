@@ -10,6 +10,7 @@ import { arrayUniqWith } from './array-uniq-with';
 import { coerceArray } from './coerce-array';
 import { isArray } from './is-array';
 import { isFunction } from './is-function';
+import { ArrayCallback } from './type';
 
 export type IdKeyType = number | string;
 export type IdGetterFn<T extends Record<any, any>> = (entity: T) => IdKeyType;
@@ -27,9 +28,9 @@ export function parseIdGetter<T extends Record<any, any>, K extends keyof T>(get
   }
 }
 
-export type ArrayUtilPredicate<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => boolean;
-export type ArrayUtilUpdate<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => T;
-export type ArrayUtilVoidCallback<T extends Record<any, any>> = (entity: T, index: number, array: readonly T[]) => void;
+export type ArrayUtilPredicate<T extends Record<any, any>> = ArrayCallback<T, boolean>;
+export type ArrayUtilUpdate<T extends Record<any, any>> = ArrayCallback<T, T>;
+export type ArrayUtilVoidCallback<T extends Record<any, any>> = ArrayCallback<T, void>;
 
 /**
  * @description a set of utilities to modify an array of objects with immutability
@@ -272,7 +273,7 @@ export class ArrayUtil<T extends Record<any, any>, K extends keyof T = keyof T> 
   }
 
   uniqBy(key: keyof T): this {
-    this.array = arrayUniqBy(this.array, key);
+    this.array = arrayUniqBy(this.array, (item) => item[key]);
     return this;
   }
 

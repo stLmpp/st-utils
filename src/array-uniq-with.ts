@@ -1,12 +1,16 @@
-export function arrayUniqWith<T>(array: readonly T[], comparator: (valueA: T, valueB: T) => boolean): T[] {
+export function arrayUniqWith<T>(
+  array: readonly T[] | null | undefined,
+  comparator: (valueA: T, valueB: T) => unknown
+): T[] {
+  array ??= [];
   const set = new Set<number>();
   const len = array.length;
-  for (let i = 0; i < len; i++) {
-    for (let j = i + 1; j < len; j++) {
-      const valueA = array[i];
-      const valueB = array[j];
+  for (let indexA = 0; indexA < len; indexA++) {
+    for (let indexB = indexA + 1; indexB < len; indexB++) {
+      const valueA = array[indexA];
+      const valueB = array[indexB];
       if (comparator(valueA, valueB)) {
-        set.add(i);
+        set.add(indexA);
         break;
       }
     }

@@ -1,15 +1,13 @@
-import { isFunction } from './is-function';
+import { ArrayCallback } from './type';
 
-export function arrayUniqBy<T extends Record<any, any>, K extends keyof T>(
-  array: readonly T[],
-  key: K | ((item: T) => T[K])
-): T[] {
-  const predicate = isFunction(key) ? key : (item: T) => item[key];
-  const map = new Map<T[K], T>();
-  for (const item of array) {
-    const itemKey = predicate(item);
-    if (!map.has(itemKey)) {
-      map.set(itemKey, item);
+export function arrayUniqBy<T>(array: readonly T[] | null | undefined, callback: ArrayCallback<T, unknown>): T[] {
+  array ??= [];
+  const map = new Map<unknown, T>();
+  for (let index = 0; index < array.length; index++) {
+    const item = array[index];
+    const key = callback(item, index, array);
+    if (!map.has(key)) {
+      map.set(key, item);
     }
   }
   return [...map.values()];

@@ -1,6 +1,6 @@
-export function isObjectEqualShallow<T extends Record<any, any>>(
-  objectA: T | null | undefined,
-  objectB: T | null | undefined
+export function isObjectEqualShallow(
+  objectA: Record<any, any> | null | undefined,
+  objectB: Record<any, any> | null | undefined
 ): boolean {
   if (objectA === objectB) {
     return true;
